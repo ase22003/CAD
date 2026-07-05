@@ -3,3 +3,5 @@
 ![Screw clamp](screenshots/clamp.png)
 
 ![Holed tube](screenshots/holed_tube.png)
+
+![Tentacle](screenshots/tentacle.png)

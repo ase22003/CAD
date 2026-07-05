@@ -20,6 +20,14 @@ function cylinder(height::Real, radius1::Real, radius2::Real)::String
 end
 cylinder(height::Real, radius::Real)::String = cylinder(height, radius, radius)
 
+function sphere(radius::Real)::String
+	"sphere($radius);"
+end
+
+function offset(radius::Real)::String
+	"sphere($radius)"
+end
+
 function polyhedron(points::Vector{RVect}, faces::Vector{Vector{Real}})::String
 	"polyhedron($points,$faces,10)"
 end
@@ -36,7 +44,7 @@ for operation ∈  ("translate", "rotate", "scale", "resize", "mirror")
 	run_meta_string("""function ( :: ( $operation ( :: vector RVect ) ( ... ( :: children String ) ) ) String ) ( _oper "$operation" vector ( ... children ) )""")
 end
 
-for operation ∈ ("hull", "union", "difference", "intersection", "minkowski")
+for operation ∈ ("hull", "union", "difference", "intersection", "minkowski", "rotate_extrude")
 	run_meta_string("""function ( :: ( $operation ( ... ( :: children String ) ) ) String ) ( _oper "$operation" ( ... children ) )""")
 	#=
 	eval(

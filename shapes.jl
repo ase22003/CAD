@@ -1,5 +1,7 @@
 #requires basic.jl
 
+@START_OF_DEBUG_CATEGORY "cad shapes"
+
 function tube(length::Real, inner_radius::Real, thickness::Real)::String
 	difference(
 		cylinder(length, inner_radius+thickness),
@@ -64,3 +66,26 @@ end
 function screw_clamp(inner_radius::Real, thickness::Real, hole_radius::Real, hole_chamfer::Real, gap::Real)::String
 	screw_clamp(hole_radius*2+thickness*2, inner_radius, thickness, hole_radius, hole_chamfer, gap)
 end
+
+function tentacle(points#=::Vector{RVect}=#, radius1::Real, radius2::Real, blend::Int=1)::String
+	radius = [i*(radius2-radius1)/length(points)+radius1 for i ∈ 0:length(points)]
+	union(
+		[
+			hull(
+				[
+					translate(points[j],
+						sphere(radius[j])
+					)
+					for j ∈ i:i+blend
+				]...
+			)
+			for i ∈ 1:length(points)-blend
+		]...
+	)
+end
+
+function tentacle(points#=w::Vector{RVect}=#, radius::Real, blend::Real=1)::String
+	tentacle(points, radius, radius, blend)
+end
+
+@END_OF_DEBUG_CATEGORY
