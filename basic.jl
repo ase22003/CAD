@@ -65,6 +65,9 @@ end
 function highlight(children::Vector{String})::String
 	string("#", children...)
 end
+function highlight(child::String)::String
+	string("#", child)
+end
 #}}}
 
 @END_OF_DEBUG_CATEGORY
