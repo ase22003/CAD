@@ -62,5 +62,5 @@ function screw_clamp(length::Real, inner_radius::Real, thickness::Real, hole_rad
 end
 
 function screw_clamp(inner_radius::Real, thickness::Real, hole_radius::Real, hole_chamfer::Real, gap::Real)::String
-	screw_clamp(hole_radius+thickness*2+10, inner_radius, thickness, hole_radius, hole_chamfer, gap)
+	screw_clamp(hole_radius*2+thickness*2, inner_radius, thickness, hole_radius, hole_chamfer, gap)
 end
