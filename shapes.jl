@@ -90,24 +90,20 @@ function tentacle(points::Vector{<:RVect}, radius::Real, blend::Real=1)::String
 	tentacle(points, radius, radius, blend)
 end
 
-#@logged function angle_between_vectors(α::RVect, β::RVect)::Real
-#	return acos((α⋅β) / (norm(α)*norm(β))) → rad2deg
-#end
-
-@logged function supported_tentacle(points::Vector{<:RVect}, radius::Real, #=max_angle::Real=60,=# factor::Real=0.5)::String
+@logged function supported_tentacle(points::Vector{<:RVect}, radius::Real, filled_suppors::Bool=true, support_factor::Real=0.5, placement_factor::Real=0.3)::String
 	return union(
 		tentacle(points, radius, 1),
 		[
-			#angle_between_vectors(points[i-1]-points[i], points[i+1]-points[i]) >= max_angle ?
-			tentacle(
-				#[-(points[i-1]-points[i])+(points[i+1]-points[i])/2,
-				# -(points[i+1]-points[i])+(points[i-1]-points[i])/2],
-				[
-					points[i-1] + (points[i]-points[i-1])*(1-factor),
-					points[i]   + (points[i+1]-points[i])*factor,
-				],
-				radius/2
-			)# : ""
+			hull(
+				filled_suppors ? translate(points[i], sphere(radius)) : "",
+				tentacle(
+					[
+						points[i-1] + (points[i]-points[i-1])*(1-placement_factor),
+						points[i]   + (points[i+1]-points[i])*placement_factor,
+					],
+					radius*support_factor
+				)
+			)
 			for i ∈ 2:length(points)-1
 		]...
 	)
