@@ -4,7 +4,7 @@
 
 @START_OF_DEBUG_CATEGORY "cad basic"
 
-RVect = Union{Vector{Real}, Tuple{Real, Real, Real}}
+const RVect = Union{Vector{<:Real}, Tuple{<:Real, <:Real, <:Real}}
 
 #{{{ELEMENTARY FUNCTIONS
 printed(vector::RVect)::String = "[$(vector[1]),$(vector[2]),$(vector[3])]"

@@ -1,5 +1,7 @@
 #requires basic.jl
 
+using LinearAlgebra
+
 @START_OF_DEBUG_CATEGORY "cad shapes"
 
 function tube(length::Real, inner_radius::Real, thickness::Real)::String
@@ -67,9 +69,9 @@ function screw_clamp(inner_radius::Real, thickness::Real, hole_radius::Real, hol
 	screw_clamp(hole_radius*2+thickness*2, inner_radius, thickness, hole_radius, hole_chamfer, gap)
 end
 
-function tentacle(points#=::Vector{RVect}=#, radius1::Real, radius2::Real, blend::Int=1)::String
+@logged function tentacle(points::Vector{<:RVect}, radius1::Real, radius2::Real, blend::Int=1)::String
 	radius = [i*(radius2-radius1)/length(points)+radius1 for i ∈ 0:length(points)]
-	union(
+	return union(
 		[
 			hull(
 				[
@@ -84,8 +86,31 @@ function tentacle(points#=::Vector{RVect}=#, radius1::Real, radius2::Real, blend
 	)
 end
 
-function tentacle(points#=w::Vector{RVect}=#, radius::Real, blend::Real=1)::String
+function tentacle(points::Vector{<:RVect}, radius::Real, blend::Real=1)::String
 	tentacle(points, radius, radius, blend)
+end
+
+#@logged function angle_between_vectors(α::RVect, β::RVect)::Real
+#	return acos((α⋅β) / (norm(α)*norm(β))) → rad2deg
+#end
+
+@logged function supported_tentacle(points::Vector{<:RVect}, radius::Real, #=max_angle::Real=60,=# factor::Real=0.5)::String
+	return union(
+		tentacle(points, radius, 1),
+		[
+			#angle_between_vectors(points[i-1]-points[i], points[i+1]-points[i]) >= max_angle ?
+			tentacle(
+				#[-(points[i-1]-points[i])+(points[i+1]-points[i])/2,
+				# -(points[i+1]-points[i])+(points[i-1]-points[i])/2],
+				[
+					points[i-1] + (points[i]-points[i-1])*(1-factor),
+					points[i]   + (points[i+1]-points[i])*factor,
+				],
+				radius/2
+			)# : ""
+			for i ∈ 2:length(points)-1
+		]...
+	)
 end
 
 @END_OF_DEBUG_CATEGORY
