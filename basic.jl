@@ -78,4 +78,14 @@ function highlight(child::String)::String
 end
 #}}}
 
+function write_out(model::String)::Nothing
+	open("out.scad", "w") do file
+		write(file, model)
+	end
+	return
+end
+function write_out(models::String...)::Nothing
+	write_out(string(models...))
+end
+
 @END_OF_DEBUG_CATEGORY
